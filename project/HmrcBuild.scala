@@ -27,7 +27,7 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "play-async" % "0.3.0",
+    "uk.gov.hmrc" %% "play-async" % "0.4.0",
     "uk.gov.hmrc" %% "crypto" % "3.1.0",
     "uk.gov.hmrc" %% "play-filters" % "4.6.0",
     "uk.gov.hmrc" %% "play-config" % "2.0.1",

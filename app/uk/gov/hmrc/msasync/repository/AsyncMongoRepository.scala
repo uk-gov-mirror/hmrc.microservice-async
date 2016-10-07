@@ -18,7 +18,7 @@ package uk.gov.hmrc.msasync.repository
 
 import play.api.libs.json._
 import play.modules.reactivemongo.MongoDbConnection
-import reactivemongo.api.DB
+import reactivemongo.api.{ReadPreference, DB}
 import reactivemongo.api.indexes.{Index, IndexType}
 import reactivemongo.bson._
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
@@ -84,7 +84,9 @@ class AsyncMongoRepository(implicit mongo: () => DB)
 
   protected def findById(id: String) = BSONDocument("task.id" -> BSONString(id))
 
-  override def findByTaskId(id: String): Future[Option[TaskCachePersist]] = collection.find(findById(id)).one[TaskCachePersist]
+  override def findByTaskId(id: String): Future[Option[TaskCachePersist]] = {
+    collection.find(findById(id)).one[TaskCachePersist](ReadPreference.primaryPreferred)
+  }
 
   override def removeById(id: String): Future[Unit] = {
     import reactivemongo.bson.BSONDocument

@@ -7,45 +7,56 @@ object HmrcBuild extends Build {
   import uk.gov.hmrc.SbtAutoBuildPlugin
   import uk.gov.hmrc.versioning.SbtGitVersioning
 
-
   val nameApp = "microservice-async"
 
   lazy val library = Project(nameApp, file("."))
-    .enablePlugins(play.PlayScala, SbtAutoBuildPlugin, SbtGitVersioning)
+    .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)
     .settings(scalaSettings: _*)
     .settings(defaultSettings(): _*)
     .settings(
       libraryDependencies ++= AppDependencies(),
-      crossScalaVersions := Seq("2.11.7")
+      scalaVersion := "2.11.7",
+      crossScalaVersions := Seq("2.11.7"),
+      resolvers := Seq(
+        Resolver.bintrayRepo("hmrc", "releases"),
+        "typesafe-releases" at "http://repo.typesafe.com/typesafe/releases/"
+      )
+
     )
-    .settings(resolvers += Resolver.bintrayRepo("hmrc", "releases"))
 }
 
 private object AppDependencies {
 
-  import play.PlayImport._
   import play.core.PlayVersion
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "play-async" % "0.4.0",
+    "uk.gov.hmrc" %% "play-async" % "1.0.0",
     "uk.gov.hmrc" %% "crypto" % "3.1.0",
-    "uk.gov.hmrc" %% "play-filters" % "4.6.0",
-    "uk.gov.hmrc" %% "play-config" % "2.0.1",
-    "uk.gov.hmrc" %% "play-json-logger" % "2.1.1",
-    "uk.gov.hmrc" %% "play-reactivemongo" % "4.8.0"
+    "uk.gov.hmrc" %% "play-filters" % "5.4.0",
+    "uk.gov.hmrc" %% "play-config" % "3.0.0",
+    "uk.gov.hmrc" %% "logback-json-logger" % "3.0.0",
+    "uk.gov.hmrc" %% "play-reactivemongo" % "5.0.0"
   )
 
-  val testScope: String = "test"
+  trait TestDependencies {
+    lazy val scope: String = "test"
+    lazy val test: Seq[ModuleID] = ???
+  }
 
-  val test = Seq(
-    "org.scalatest" %% "scalatest" % "2.2.1" % testScope,
-    "org.pegdown" % "pegdown" % "1.4.2" % testScope,
-    "uk.gov.hmrc" %% "hmrctest" % "1.7.0" % testScope,
-    "uk.gov.hmrc" %% "play-config" % "2.0.1" % testScope,
-    "uk.gov.hmrc" %% "reactivemongo-test" % "1.6.0" % testScope
-  )
+  object Test {
 
-  def apply() = compile ++ test
+    def apply() = new TestDependencies {
+      override lazy val test = Seq(
+        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
+        "uk.gov.hmrc" %% "hmrctest" % "2.0.0" % scope,
+        "uk.gov.hmrc" %% "reactivemongo-test" % "1.6.0" % scope,
+        "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
+        "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,
+        "org.mockito" % "mockito-all" % "1.9.5" % scope
+      )
+    }.test
+  }
+  def apply() = compile ++ Test()
 }
 
 

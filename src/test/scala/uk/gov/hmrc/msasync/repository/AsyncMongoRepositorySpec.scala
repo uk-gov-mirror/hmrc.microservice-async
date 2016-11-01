@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package uk.hmrc.msasync.repository
+package uk.gov.hmrc.msasync.repository
 
 import org.scalatest.concurrent.PatienceConfiguration.Timeout
 import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.time.{Millis, Span}
 import org.scalatest.{BeforeAndAfterEach, LoneElement}
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.msasync.repository.{TaskCachePersist, AsyncMongoRepository}
 import uk.gov.hmrc.mongo._
 import reactivemongo.core.errors.DatabaseException
 import uk.gov.hmrc.play.asyncmvc.model.TaskCache

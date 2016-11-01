@@ -16,19 +16,24 @@
 
 package uk.gov.hmrc.msasync.filter
 
+import akka.actor.ActorSystem
+import akka.stream.{Materializer, ActorMaterializer}
 import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, PlainText}
+import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 import uk.gov.hmrc.play.filters.frontend.CookieCryptoFilter
 
-object SessionCookieCryptoFilter extends CookieCryptoFilter {
+object SessionCookieCryptoFilter extends CookieCryptoFilter with MicroserviceFilterSupport {
 
   // Lazy because the filter is instantiated before the config is loaded
   private lazy val crypto = ApplicationCrypto.SessionCookieCrypto
 
-  override protected val encrypter = encrypt _
-  override protected val decrypter = decrypt _
+  override protected val encrypter: (String) => String = encrypt _
+  override protected val decrypter: (String) => String = decrypt _
 
   def encrypt(plainCookie: String): String = crypto.encrypt(PlainText(plainCookie)).value
 
   def decrypt(encryptedCookie: String): String = crypto.decrypt(Crypted(encryptedCookie)).value
 
+  implicit val system = ActorSystem()
+  override implicit def mat: Materializer = ActorMaterializer()
 }

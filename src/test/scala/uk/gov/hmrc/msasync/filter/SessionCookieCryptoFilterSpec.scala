@@ -14,29 +14,36 @@
  * limitations under the License.
  */
 
-package uk.hmrc.msasync.filter
+package uk.gov.hmrc.msasync.filter
 
 import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.mock.MockitoSugar
-import org.scalatest.{Matchers, WordSpecLike}
+import org.scalatest.{Suite, Matchers, WordSpecLike}
 import play.api.http.HeaderNames
 import play.api.mvc.{Cookie, RequestHeader, Result, Session, _}
-import play.api.test.{FakeApplication, FakeRequest, WithApplication}
-import uk.gov.hmrc.msasync.filter.SessionCookieCryptoFilter
+import play.api.test.{FakeApplication, FakeRequest}
 import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, PlainText}
+import uk.gov.hmrc.play.test.WithFakeApplication
 
 import scala.concurrent.Future
 
-class SessionCookieCryptoFilterSpec extends WordSpecLike with Matchers with MockitoSugar with ScalaFutures {
+trait FakePlayApplication extends WithFakeApplication {
+  this: Suite =>
+
+  override lazy val fakeApplication = FakeApplication()
+}
+
+class SessionCookieCryptoFilterSpec extends WordSpecLike with Matchers with MockitoSugar with ScalaFutures with WithFakeApplication {
 
   val appConfig = Map("cookie.encryption.key" -> "MTIzNDU2Nzg5MDEyMzQ1Cg==")
+  override lazy val fakeApplication = FakeApplication(additionalConfiguration = appConfig)
 
   val action = {
     val mockAction = mock[(RequestHeader) => Future[Result]]
-    val outgoingResponse = Future.successful(Results.Ok.withHeaders(HeaderNames.SET_COOKIE -> Cookies.encode(Seq(Cookie(Session.COOKIE_NAME, "our new cookie")))))
+    val outgoingResponse = Future.successful(Results.Ok.withCookies(Cookie(Session.COOKIE_NAME, "cookie")))
     when(mockAction.apply(any())).thenReturn(outgoingResponse)
     mockAction
   }
@@ -51,17 +58,18 @@ class SessionCookieCryptoFilterSpec extends WordSpecLike with Matchers with Mock
 
     def createEncryptedCookie(cookieVal: String) = Cookie(Session.COOKIE_NAME, ApplicationCrypto.SessionCookieCrypto.encrypt(PlainText(cookieVal)).value)
 
-    "decrypt the session cookie on the way in and encrypt it again on the way back" in new WithApplication(FakeApplication(additionalConfiguration = appConfig)) {
-      val encryptedIncomingCookie = createEncryptedCookie("our cookie")
-      val unencryptedIncomingCookie = Cookie(Session.COOKIE_NAME, "our cookie")
+    "decrypt the session cookie on the way in and encrypt it again on the way back" in {
+
+      val encryptedIncomingCookie = createEncryptedCookie("cookie")
+      val unencryptedIncomingCookie = Cookie(Session.COOKIE_NAME, "cookie")
 
       val incomingRequest = FakeRequest().withCookies(encryptedIncomingCookie)
-      val response = SessionCookieCryptoFilter(action)(incomingRequest).futureValue
+      val response: Result = SessionCookieCryptoFilter(action)(incomingRequest).futureValue
 
       requestPassedToAction.cookies(Session.COOKIE_NAME) shouldBe unencryptedIncomingCookie
 
-      val encryptedOutgoingCookieValue = Cookies.decode(response.header.headers(HeaderNames.SET_COOKIE)).head.value
-      ApplicationCrypto.SessionCookieCrypto.decrypt(Crypted(encryptedOutgoingCookieValue)).value shouldBe "our new cookie"
+      val encryptedCookieResponse = Cookies.decodeSetCookieHeader(response.header.headers(HeaderNames.SET_COOKIE)).head.value
+      ApplicationCrypto.SessionCookieCrypto.decrypt(Crypted(encryptedCookieResponse)).value shouldBe "cookie"
     }
 
   }

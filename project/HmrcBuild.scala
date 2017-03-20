@@ -15,8 +15,8 @@ object HmrcBuild extends Build {
     .settings(defaultSettings(): _*)
     .settings(
       libraryDependencies ++= AppDependencies(),
-      scalaVersion := "2.11.7",
-      crossScalaVersions := Seq("2.11.7"),
+      scalaVersion := "2.11.8",
+      crossScalaVersions := Seq("2.11.8"),
       resolvers := Seq(
         Resolver.bintrayRepo("hmrc", "releases"),
         "typesafe-releases" at "http://repo.typesafe.com/typesafe/releases/"

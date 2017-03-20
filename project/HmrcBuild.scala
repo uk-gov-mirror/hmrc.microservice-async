@@ -15,8 +15,8 @@ object HmrcBuild extends Build {
     .settings(defaultSettings(): _*)
     .settings(
       libraryDependencies ++= AppDependencies(),
-      scalaVersion := "2.11.7",
-      crossScalaVersions := Seq("2.11.7"),
+      scalaVersion := "2.11.8",
+      crossScalaVersions := Seq("2.11.8"),
       resolvers := Seq(
         Resolver.bintrayRepo("hmrc", "releases"),
         "typesafe-releases" at "http://repo.typesafe.com/typesafe/releases/"
@@ -30,11 +30,11 @@ private object AppDependencies {
   import play.core.PlayVersion
 
   val compile = Seq(
-    "uk.gov.hmrc" %% "play-async" % "1.0.0",
-    "uk.gov.hmrc" %% "crypto" % "3.1.0",
-    "uk.gov.hmrc" %% "play-filters" % "5.4.0",
-    "uk.gov.hmrc" %% "play-config" % "3.0.0",
-    "uk.gov.hmrc" %% "play-reactivemongo" % "5.0.0"
+    "uk.gov.hmrc" %% "play-async" % "1.1.0",
+    "uk.gov.hmrc" %% "crypto" % "4.2.0",
+    "uk.gov.hmrc" %% "play-filters" % "5.14.0",
+    "uk.gov.hmrc" %% "play-config" % "4.3.0",
+    "uk.gov.hmrc" %% "play-reactivemongo" % "5.2.0"
   )
 
   trait TestDependencies {
@@ -46,8 +46,8 @@ private object AppDependencies {
 
     def apply() = new TestDependencies {
       override lazy val test = Seq(
-        "org.scalatest" %% "scalatest" % "2.2.6" % scope,
-        "uk.gov.hmrc" %% "hmrctest" % "2.0.0" % scope,
+        "org.scalatest" %% "scalatest" % "3.0.1" % scope,
+        "uk.gov.hmrc" %% "hmrctest" % "2.3.0" % scope,
         "uk.gov.hmrc" %% "reactivemongo-test" % "1.6.0" % scope,
         "com.typesafe.play" %% "play-test" % PlayVersion.current % scope,
         "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % scope,

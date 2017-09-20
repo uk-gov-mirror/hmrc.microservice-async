@@ -1,6 +1,6 @@
 import uk.gov.hmrc.DefaultBuildSettings._
 
-name := "native-apps-api-orchestration"
+name := "microservice-async"
 
 lazy val library = (project in file("."))
     .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning)

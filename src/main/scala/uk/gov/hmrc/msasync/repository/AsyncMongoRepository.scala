@@ -18,13 +18,14 @@ package uk.gov.hmrc.msasync.repository
 
 import play.api.libs.json._
 import play.modules.reactivemongo.MongoDbConnection
-import reactivemongo.api.{ReadPreference, DB}
 import reactivemongo.api.indexes.{Index, IndexType}
+import reactivemongo.api.{DB, ReadPreference}
 import reactivemongo.bson._
 import uk.gov.hmrc.mongo.json.ReactiveMongoFormats
 import uk.gov.hmrc.mongo.{AtomicUpdate, BSONBuilderHelpers, DatabaseUpdate, ReactiveRepository}
 import uk.gov.hmrc.play.asyncmvc.model.TaskCache
 import uk.gov.hmrc.time.DateTimeUtils
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -49,6 +50,8 @@ class AsyncMongoRepository(implicit mongo: () => DB)
           with AtomicUpdate[TaskCachePersist]
           with AsyncRepository
           with BSONBuilderHelpers {
+
+  import reactivemongo.play.json.ImplicitBSONHandlers._
 
   override def ensureIndexes(implicit ec: ExecutionContext): Future[scala.Seq[Boolean]] = {
     // set to zero for per document TTL using 'expiry' attribute to define the actual expiry time.

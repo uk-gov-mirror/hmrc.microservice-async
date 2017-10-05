@@ -9,7 +9,7 @@ object AppDependencies {
     "uk.gov.hmrc" %% "crypto" % "4.4.0",
     "uk.gov.hmrc" %% "play-filters" % "5.18.0",
     "uk.gov.hmrc" %% "play-config" % "4.3.0",
-    "uk.gov.hmrc" %% "play-reactivemongo" % "5.2.0"
+    "uk.gov.hmrc" %% "play-reactivemongo" % "6.1.0"
   )
 
   trait TestDependencies {

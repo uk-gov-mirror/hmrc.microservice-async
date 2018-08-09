@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import uk.gov.hmrc.play.asyncmvc.model.TaskCache
 import uk.gov.hmrc.time.DateTimeUtils
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.{ExecutionContext, Future}
+import reactivemongo.play.json.ImplicitBSONHandlers
 
 case class TaskCachePersist(id: BSONObjectID, task:TaskCache)
 
@@ -85,10 +86,12 @@ class AsyncMongoRepository(implicit mongo: () => DB)
   protected def findById(id: String) = BSONDocument("task.id" -> BSONString(id))
 
   override def findByTaskId(id: String): Future[Option[TaskCachePersist]] = {
+    import ImplicitBSONHandlers._
     collection.find(findById(id)).one[TaskCachePersist](ReadPreference.primaryPreferred)
   }
 
   override def removeById(id: String): Future[Unit] = {
+    import ImplicitBSONHandlers._
     import reactivemongo.bson.BSONDocument
     collection.remove(BSONDocument("task.id" -> id)).map(_ => {})
   }

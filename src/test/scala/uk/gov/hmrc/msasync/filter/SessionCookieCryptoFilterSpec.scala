@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 HM Revenue & Customs
+ * Copyright 2018 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,10 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Matchers._
 import org.mockito.Mockito._
 import org.scalatest.concurrent.ScalaFutures
-import org.scalatest.mock.MockitoSugar
+import org.scalatest.mockito.MockitoSugar
 import org.scalatest.{Suite, Matchers, WordSpecLike}
 import play.api.http.HeaderNames
-import play.api.mvc.{Cookie, RequestHeader, Result, Session, _}
+import play.api.mvc._
 import play.api.test.{FakeApplication, FakeRequest}
 import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, PlainText}
 import uk.gov.hmrc.play.test.WithFakeApplication
@@ -41,8 +41,8 @@ class SessionCookieCryptoFilterSpec extends WordSpecLike with Matchers with Mock
   val appConfig = Map("cookie.encryption.key" -> "MTIzNDU2Nzg5MDEyMzQ1Cg==")
   override lazy val fakeApplication = FakeApplication(additionalConfiguration = appConfig)
 
-  val action = {
-    val mockAction = mock[(RequestHeader) => Future[Result]]
+  val action: RequestHeader => Future[Result] = {
+    val mockAction = mock[RequestHeader => Future[Result]]
     val outgoingResponse = Future.successful(Results.Ok.withCookies(Cookie(Session.COOKIE_NAME, "cookie")))
     when(mockAction.apply(any())).thenReturn(outgoingResponse)
     mockAction

@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,8 @@ object SessionCookieCryptoFilter extends CookieCryptoFilter with MicroserviceFil
   // Lazy because the filter is instantiated before the config is loaded
   private lazy val crypto = ApplicationCrypto.SessionCookieCrypto
 
-  override protected val encrypter: (String) => String = encrypt _
-  override protected val decrypter: (String) => String = decrypt _
+  override protected val encrypter: String => String = encrypt _
+  override protected val decrypter: String => String = decrypt _
 
   def encrypt(plainCookie: String): String = crypto.encrypt(PlainText(plainCookie)).value
 

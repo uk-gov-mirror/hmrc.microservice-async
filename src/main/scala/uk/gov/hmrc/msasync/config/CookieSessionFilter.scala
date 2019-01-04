@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 HM Revenue & Customs
+ * Copyright 2019 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,5 +19,5 @@ package uk.gov.hmrc.msasync.config
 import uk.gov.hmrc.msasync.filter.SessionCookieCryptoFilter
 
 object CookieSessionFilter {
-  def SessionCookieFilter = Seq(SessionCookieCryptoFilter)
+  def SessionCookieFilter: Seq[SessionCookieCryptoFilter.type] = Seq(SessionCookieCryptoFilter)
 }

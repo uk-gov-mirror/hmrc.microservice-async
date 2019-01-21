@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.msasync.filter
 
+import play.api.Play
 import uk.gov.hmrc.crypto.{ApplicationCrypto, Crypted, PlainText}
 import uk.gov.hmrc.play.filters.MicroserviceFilterSupport
 import uk.gov.hmrc.play.filters.frontend.CookieCryptoFilter
 
-object SessionCookieCryptoFilter extends CookieCryptoFilter with MicroserviceFilterSupport {
+object SessionCookieCryptoFilters  extends CookieCryptoFilter with MicroserviceFilterSupport {
 
   // Lazy because the filter is instantiated before the config is loaded
-  private lazy val crypto = ApplicationCrypto.SessionCookieCrypto
+  lazy val applicationCrypto = new ApplicationCrypto(Play.current.configuration.underlying)
+  private lazy val crypto = applicationCrypto.SessionCookieCrypto
 
   override protected val encrypter: String => String = encrypt _
   override protected val decrypter: String => String = decrypt _
@@ -31,5 +33,4 @@ object SessionCookieCryptoFilter extends CookieCryptoFilter with MicroserviceFil
   def encrypt(plainCookie: String): String = crypto.encrypt(PlainText(plainCookie)).value
 
   def decrypt(encryptedCookie: String): String = crypto.decrypt(Crypted(encryptedCookie)).value
-
 }

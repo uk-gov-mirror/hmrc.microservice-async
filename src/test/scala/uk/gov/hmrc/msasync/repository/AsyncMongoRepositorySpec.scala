@@ -21,10 +21,11 @@ import org.scalatest.concurrent.{Eventually, ScalaFutures}
 import org.scalatest.time.{Millis, Span}
 import org.scalatest.{BeforeAndAfterEach, LoneElement}
 import reactivemongo.bson.BSONObjectID
-import uk.gov.hmrc.mongo._
 import reactivemongo.core.errors.DatabaseException
+import uk.gov.hmrc.mongo.{DatabaseUpdate, MongoSpecSupport, Saved}
 import uk.gov.hmrc.play.asyncmvc.model.TaskCache
 import uk.gov.hmrc.play.test.UnitSpec
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 

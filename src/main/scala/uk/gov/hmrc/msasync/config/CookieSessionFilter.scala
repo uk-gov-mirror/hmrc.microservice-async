@@ -16,8 +16,8 @@
 
 package uk.gov.hmrc.msasync.config
 
-import uk.gov.hmrc.msasync.filter.SessionCookieCryptoFilter
+import uk.gov.hmrc.msasync.filter.SessionCookieCryptoFilters
 
 object CookieSessionFilter {
-  def SessionCookieFilter: Seq[SessionCookieCryptoFilter.type] = Seq(SessionCookieCryptoFilter)
+  def SessionCookieFilter: Seq[SessionCookieCryptoFilters.type] = Seq(SessionCookieCryptoFilters)
 }

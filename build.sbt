@@ -9,6 +9,7 @@ lazy val library = (project in file("."))
   .enablePlugins(SbtAutoBuildPlugin, SbtGitVersioning, SbtArtifactory)
   .settings(scalaSettings: _*)
   .settings(defaultSettings(): _*)
+  .settings(PlayCrossCompilation.playCrossCompilationSettings)
   .settings(
     majorVersion := 2,
     libraryDependencies ++= AppDependencies(),

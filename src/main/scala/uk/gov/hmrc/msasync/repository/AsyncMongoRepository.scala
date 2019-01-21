@@ -35,7 +35,7 @@ object TaskCachePersist {
 
   val mongoFormats: Format[TaskCachePersist] = ReactiveMongoFormats.mongoEntity(
   {
-    implicit val oidFormat = ReactiveMongoFormats.objectIdFormats
+    implicit val oidFormat: Format[BSONObjectID] = ReactiveMongoFormats.objectIdFormats
     Format(Json.reads[TaskCachePersist], Json.writes[TaskCachePersist])
   })
 }

@@ -19,8 +19,8 @@ object AppDependencies {
       "uk.gov.hmrc" %% "play-async" %"2.4.0-play-25",
       "uk.gov.hmrc" %% "hmrctest" % "3.4.0-play-25",
       "com.typesafe.play" %% "play-test" % play25Version % Test,
-      "uk.gov.hmrc" %% "simple-reactivemongo" % "7.7.0-play-25",
-      "uk.gov.hmrc" %% "reactivemongo-test" % "4.4.0-play-25" % Test,
+      "uk.gov.hmrc" %% "simple-reactivemongo" % "7.9.0-play-25",       
+      "uk.gov.hmrc" %% "reactivemongo-test" % "4.6.0-play-25" % Test,  
       "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.1" % Test
   ),
 
@@ -31,8 +31,8 @@ object AppDependencies {
       "uk.gov.hmrc" %% "hmrctest" % "3.4.0-play-26" % Test,
       "com.typesafe.play" %% "play-test" % play26Version % Test,
       "uk.gov.hmrc" %% "bootstrap-play-26" % "0.35.0",
-      "uk.gov.hmrc" %% "simple-reactivemongo" % "7.7.0-play-26",
-      "uk.gov.hmrc" %% "reactivemongo-test" % "4.4.0-play-26" % Test,
+      "uk.gov.hmrc" %% "simple-reactivemongo" % "7.9.0-play-26",     
+      "uk.gov.hmrc" %% "reactivemongo-test" % "4.6.0-play-26" % Test,
       "org.scalatestplus.play" %% "scalatestplus-play" % "3.0.0" % Test
     )
   )
